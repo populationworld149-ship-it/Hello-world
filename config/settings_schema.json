@@ -1,0 +1,10 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Custom Shopify Theme",
+    "theme_author": "Cursor Agent",
+    "theme_version": "1.0.0",
+    "theme_documentation_url": "https://github.com/shopify/dawn",
+    "theme_support_url": "https://github.com/shopify/dawn/issues"
+  }
+]
