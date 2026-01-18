@@ -86,7 +86,8 @@
         left: 0 !important;
         right: 0 !important;
         width: 100% !important;
-        z-index: 20 !important;
+        /* Keep flowers behind product/plate (as in Canva) */
+        z-index: 5 !important;
         pointer-events: none !important;
         transform: translateY(-48px);
         opacity: 0;
@@ -131,7 +132,8 @@
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        z-index: 10 !important;
+        /* Above hanging flowers so product is in front */
+        z-index: 30 !important;
       }
 
       /* Navigation items positioned around the plate */
