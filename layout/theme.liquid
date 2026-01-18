@@ -141,6 +141,11 @@
         font-size: 26px !important;
         font-weight: 400 !important;
         text-decoration: none !important;
+        background: transparent !important; /* allow buttons to look like text */
+        border: none !important;
+        padding: 0 !important;
+        font-family: inherit !important;
+        line-height: 1 !important;
         z-index: 50 !important;
         text-shadow: 1px 1px 6px rgba(0,0,0,0.25) !important;
         transition: transform 0.25s ease, text-shadow 0.25s ease, opacity 1.2s ease !important;
@@ -159,7 +164,6 @@
 
       .nav-order { top: 58% !important; right: 28px !important; text-transform: lowercase; }
       .nav-account { top: 70% !important; right: 40px !important; }
-      .nav-info { bottom: 70px !important; right: 10% !important; transform: translateX(50%) !important; text-transform: lowercase; }
 
       /* Carousel arrows */
       .carousel-nav {
@@ -304,13 +308,11 @@
         inset: 0 !important;
         background: rgba(0, 0, 0, 0.35) !important;
         display: none !important;
-        align-items: center !important;
-        justify-content: center !important;
         z-index: 200 !important;
       }
 
       .popup-overlay.is-open {
-        display: flex !important;
+        display: block !important;
       }
 
       .popup-card {
@@ -322,7 +324,10 @@
         justify-content: center !important;
         padding: 30px 20px !important;
         text-align: center !important;
-        position: relative !important;
+        position: fixed !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
       }
 
       .popup-title {
@@ -487,7 +492,6 @@
 
         .nav-order { top: 55% !important; right: 20px !important; font-size: 16px !important; }
         .nav-account { top: 67% !important; right: 28px !important; }
-        .nav-info { bottom: 60px !important; right: 10% !important; font-size: 16px !important; }
 
         .carousel-nav {
           width: 52px !important;
@@ -535,13 +539,14 @@
       </a>
 
       <!-- Navigation (positioned) -->
-      <a href="/collections/drinks" class="nav-item nav-drinks">Drinks</a>
-      <a href="/collections/food" class="nav-item nav-food">food</a>
-      <a href="/collections/pastry" class="nav-item nav-pastry">Pastry</a>
+      <!-- Categories: buttons (NO redirect) -->
+      <button type="button" class="nav-item nav-drinks js-category" data-category="drinks">Drinks</button>
+      <button type="button" class="nav-item nav-food js-category" data-category="food">food</button>
+      <button type="button" class="nav-item nav-pastry js-category" data-category="pastry">Pastry</button>
 
-      <a href="{{ routes.cart_url }}" class="nav-item nav-order js-popup-trigger" data-popup="cart">order/cart</a>
-      <a href="{{ routes.account_url }}" class="nav-item nav-account js-popup-trigger" data-popup="account">Account</a>
-      <a href="{{ pages['info'].url | default: '/pages/info' }}" class="nav-item nav-info js-popup-trigger" data-popup="info">product info</a>
+      <!-- Right side: popup triggers (NO redirect) -->
+      <button type="button" class="nav-item nav-order js-popup-trigger" data-popup="cart">order/cart</button>
+      <button type="button" class="nav-item nav-account js-popup-trigger" data-popup="account">Account</button>
 
       <!-- Popup card -->
       <div class="popup-overlay" id="popupOverlay" aria-hidden="true">
@@ -578,24 +583,37 @@
           <button class="carousel-nav carousel-next" type="button" aria-label="Next">›</button>
 
           <!-- Product slides -->
-          {% assign featured = collections.featured.products | default: collections.all.products %}
-          {% for product in featured limit: 8 %}
-            {% assign v = product.selected_or_first_available_variant %}
-            <div
-              class="product-slide {% if forloop.first %}active{% endif %}"
-              data-slide
-              data-product-title="{{ product.title | escape }}"
-              data-variant-id="{{ v.id }}"
-            >
-              <div class="plate-platform">
-                <img src="https://cdn.shopify.com/s/files/1/0723/4302/7849/files/plate.png?v=1768585776" alt="" class="plate-bg">
-                {% if product.featured_image %}
-                  <img src="{{ product.featured_image | image_url: width: 900 }}" alt="{{ product.title | escape }}" class="product-image">
-                {% else %}
-                  <div style="width:52%;height:220px;border-radius:18px;background:rgba(255,255,255,0.25);border:2px dashed rgba(255,255,255,0.45);"></div>
-                {% endif %}
+          {%- comment -%}
+            Render slide sets per category collection.
+            Handles expected: drinks / food / pastry.
+            If a collection is missing/empty, it falls back to collections.all.
+          {%- endcomment -%}
+          {% assign handles = 'drinks,food,pastry' | split: ',' %}
+          {% for handle in handles %}
+            {% assign col = collections[handle] %}
+            {% if col == blank or col.products_count == 0 %}
+              {% assign col = collections.all %}
+            {% endif %}
+
+            {% for product in col.products limit: 8 %}
+              {% assign v = product.selected_or_first_available_variant %}
+              <div
+                class="product-slide"
+                data-slide
+                data-category="{{ handle }}"
+                data-product-title="{{ product.title | escape }}"
+                data-variant-id="{{ v.id }}"
+              >
+                <div class="plate-platform">
+                  <img src="https://cdn.shopify.com/s/files/1/0723/4302/7849/files/plate.png?v=1768585776" alt="" class="plate-bg">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | image_url: width: 900 }}" alt="{{ product.title | escape }}" class="product-image">
+                  {% else %}
+                    <div style="width:52%;height:220px;border-radius:18px;background:rgba(255,255,255,0.25);border:2px dashed rgba(255,255,255,0.45);"></div>
+                  {% endif %}
+                </div>
               </div>
-            </div>
+            {% endfor %}
           {% endfor %}
         </div>
       </main>
@@ -607,53 +625,40 @@
         // Page-load animations
         requestAnimationFrame(() => document.body.classList.add('is-loaded'));
 
-        // Carousel logic (with slide out right / in left)
-        let currentSlide = 0;
+        // Carousel logic (NO auto-change; switches only on click)
+        let currentCategory = 'drinks';
+        let currentIndex = 0;
         const slides = Array.from(document.querySelectorAll('[data-slide]'));
-        const totalSlides = slides.length;
         const prevBtn = document.querySelector('.carousel-prev');
         const nextBtn = document.querySelector('.carousel-next');
 
-        function setActiveSlide(nextIndex, direction) {
-          if (!totalSlides) return;
-          const prevIndex = currentSlide;
-          const prevSlide = slides[prevIndex];
-          const nextSlide = slides[nextIndex];
-          if (!prevSlide || !nextSlide || prevIndex === nextIndex) return;
-
-          prevSlide.classList.remove('slide-in-left');
-          prevSlide.classList.add('slide-out-right');
-          prevSlide.classList.remove('active');
-
-          nextSlide.classList.remove('slide-out-right');
-          nextSlide.classList.add('active', 'slide-in-left');
-
-          // Cleanup
-          window.setTimeout(() => {
-            prevSlide.classList.remove('slide-out-right');
-            nextSlide.classList.remove('slide-in-left');
-          }, 500);
-
-          currentSlide = nextIndex;
-        }
-
-        function showSlide(index) {
-          if (!totalSlides) return;
-          const nextIndex = ((index % totalSlides) + totalSlides) % totalSlides;
-          setActiveSlide(nextIndex);
+        function visibleSlides() {
+          return slides.filter((s) => (s.getAttribute('data-category') || '') === currentCategory);
         }
 
         function changeSlide(direction) {
-          showSlide(currentSlide + direction);
+          const vs = visibleSlides();
+          if (!vs.length) return;
+
+          const prev = vs[currentIndex];
+          const nextIndex = ((currentIndex + direction) % vs.length + vs.length) % vs.length;
+          const next = vs[nextIndex];
+          if (!prev || !next || prev === next) return;
+
+          prev.classList.add('slide-out-right');
+          prev.classList.remove('active');
+          next.classList.add('active', 'slide-in-left');
+
+          window.setTimeout(() => {
+            prev.classList.remove('slide-out-right');
+            next.classList.remove('slide-in-left');
+          }, 500);
+
+          currentIndex = nextIndex;
         }
 
         prevBtn?.addEventListener('click', () => changeSlide(-1));
         nextBtn?.addEventListener('click', () => changeSlide(1));
-
-        // Auto-advance
-        if (totalSlides > 1) {
-          setInterval(() => changeSlide(1), 5000);
-        }
 
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
@@ -665,8 +670,31 @@
           }
         });
 
+        function setCategory(nextCategory) {
+          currentCategory = nextCategory;
+          currentIndex = 0;
+
+          // Hide non-category slides completely so multiple don't show
+          slides.forEach((s) => {
+            const isVisible = (s.getAttribute('data-category') || '') === currentCategory;
+            s.style.display = isVisible ? '' : 'none';
+            s.classList.remove('active', 'slide-in-left', 'slide-out-right');
+          });
+
+          const vs = visibleSlides();
+          if (vs[0]) vs[0].classList.add('active');
+        }
+
+        // Category buttons: switch what's on the plate (no redirect)
+        document.querySelectorAll('.js-category').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            setCategory(btn.getAttribute('data-category') || 'drinks');
+          });
+        });
+
         // Popup card behavior (cart/account/info)
         const popupOverlay = document.getElementById('popupOverlay');
+        const popupCard = popupOverlay?.querySelector('.popup-card');
         const popupTitle = document.getElementById('popupTitle');
         const popupActions = document.getElementById('popupActions');
         const popupClose = popupOverlay?.querySelector('.popup-close');
@@ -685,22 +713,44 @@
               { label: 'Log in', href: '{{ routes.account_login_url }}' },
               { label: 'Create', href: '{{ routes.account_register_url }}' }
             ]
-          },
-          info: {
-            title: 'Product info',
-            actions: [
-              { label: 'View info', href: '{{ pages['info'].url | default: '/pages/info' }}' }
-            ]
           }
         };
 
-        function openPopup(key) {
+        function positionPopupNear(el) {
+          if (!popupCard || !el) return;
+
+          // Mobile: keep centered (original behavior)
+          if (window.matchMedia('(max-width: 768px)').matches) {
+            popupCard.style.left = '50%';
+            popupCard.style.top = '50%';
+            popupCard.style.transform = 'translate(-50%, -50%)';
+            return;
+          }
+
+          const rect = el.getBoundingClientRect();
+          const cardW = 240;
+          const cardH = 320;
+          const margin = 12;
+          const viewportW = window.innerWidth;
+          const viewportH = window.innerHeight;
+
+          let left = Math.min(viewportW - cardW - margin, Math.max(margin, rect.left + rect.width / 2 - cardW / 2));
+          let top = rect.top - cardH - 10; // prefer above the button
+          if (top < margin) top = Math.min(viewportH - cardH - margin, rect.bottom + 10); // else below
+
+          popupCard.style.left = `${left}px`;
+          popupCard.style.top = `${top}px`;
+          popupCard.style.transform = 'none';
+        }
+
+        function openPopup(key, triggerEl) {
           const data = popupContent[key];
           if (!data || !popupOverlay || !popupTitle || !popupActions) return;
           popupTitle.textContent = data.title;
           popupActions.innerHTML = data.actions
             .map((action) => `<a href="${action.href}">${action.label}</a>`)
             .join('');
+          positionPopupNear(triggerEl);
           popupOverlay.classList.add('is-open');
           popupOverlay.setAttribute('aria-hidden', 'false');
         }
@@ -713,9 +763,8 @@
 
         document.querySelectorAll('.js-popup-trigger').forEach((link) => {
           link.addEventListener('click', (event) => {
-            event.preventDefault();
             const key = link.getAttribute('data-popup');
-            openPopup(key);
+            openPopup(key, link);
           });
         });
 
@@ -735,7 +784,8 @@
         const placeholderAllergens = ['Nuts', 'Dairy', 'Gluten', 'Soy'];
 
         function openIngredients() {
-          const active = slides[currentSlide];
+          const vs = visibleSlides();
+          const active = vs[currentIndex];
           const title = active?.getAttribute('data-product-title') || 'Item';
           if (ingredientsTitle) ingredientsTitle.textContent = `Ingredients — ${title}`;
           if (ingredientsList) {
@@ -763,7 +813,8 @@
 
         // Add to cart using Shopify AJAX API (/cart/add.js)
         async function addActiveToCart() {
-          const active = slides[currentSlide];
+          const vs = visibleSlides();
+          const active = vs[currentIndex];
           const variantId = active?.getAttribute('data-variant-id');
           if (!variantId) return;
           try {
@@ -782,6 +833,9 @@
         }
 
         document.getElementById('addToOrderBtn')?.addEventListener('click', addActiveToCart);
+
+        // Init: show only Drinks slides and activate first
+        setCategory('drinks');
       </script>
     {% else %}
       <main id="MainContent">
