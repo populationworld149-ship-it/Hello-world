@@ -3,7 +3,7 @@
 Responsive, interactive template built with **HTML + CSS + JavaScript** (no framework).  
 I chose vanilla JS here because the state is small (selected category/item, cart, points) and it keeps customization easy for later Shopify/theme integration.
 
-## Pages
+## Pages (static demo)
 
 - `index.html`: Main menu page (categories → central plate → details panel)
 - `about.html`: About page (placeholder content)
@@ -44,3 +44,20 @@ npx serve .
 
 - Update placeholder menu data in `app.js` (`MENU` array).
 - Swap colors in `styles.css` (`:root` variables).
+
+## Shopify theme integration (theme.liquid rewrite)
+
+This repo now also includes a Shopify theme layout + assets:
+
+- `layout/theme.liquid`
+- `assets/cafe-template.css`
+- `assets/cafe-template.js`
+
+Behavior:
+
+- **Home page (`template.name == 'index'`)** renders the responsive menu layout.
+- **Cart page (`template.name == 'cart'`)** renders the demo cart UI (localStorage-backed).
+- **About page** renders the custom About layout when the page handle is `about`.
+- Everything else falls back to `{{ content_for_layout }}`.
+
+Note: This implementation uses **placeholder dummy data** in `assets/cafe-template.js` (Category A/B/C, Item 1/2/3...). Swap it later with Shopify collections/products when you’re ready.
