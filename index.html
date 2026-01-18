@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fusion Delicias Cafe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #f8bbd9 0%, #ec407a 20%, #e91e8a 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Floral Header */
+        .header {
+            width: 100%;
+            height: 280px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300"><defs><linearGradient id="flower" x1="0%25" y1="0%25" x2="0%25" y2="100%25"><stop offset="0%25" style="stop-color:%23f8bbd9"/><stop offset="100%25" style="stop-color:%23ec407a"/></linearGradient></defs></svg>') center top no-repeat;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 20px;
+        }
+
+        .floral-decoration {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(180deg, 
+                rgba(248, 187, 217, 0.9) 0%, 
+                rgba(236, 64, 122, 0.7) 50%,
+                transparent 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+        }
+
+        .floral-decoration::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse 8px 12px at 5% 20%, #f8bbd9 70%, transparent 70%),
+                radial-gradient(ellipse 10px 14px at 10% 35%, #f48fb1 70%, transparent 70%),
+                radial-gradient(ellipse 7px 11px at 15% 15%, #f8bbd9 70%, transparent 70%),
+                radial-gradient(ellipse 9px 13px at 20% 40%, #ec407a 70%, transparent 70%),
+                radial-gradient(ellipse 8px 12px at 25% 25%, #f8bbd9 70%, transparent 70%),
+                radial-gradient(ellipse 10px 14px at 30% 30%, #f48fb1 70%, transparent 70%),
+                radial-gradient(ellipse 7px 11px at 35% 20%, #f8bbd9 70%, transparent 70%),
+                radial-gradient(ellipse 9px 13px at 40% 35%, #ec407a 70%, transparent 70%),
+                radial-gradient(ellipse 8px 12px at 45% 15%, #f8bbd9 70%, transparent 70%),
+                radial-gradient(ellipse 10px 14px at 50% 25%, #f48fb1 70%, transparent 70%),
+                radial-gradient(ellipse 7px 11px at 55% 40%, #f8bbd9 70%, transparent 70%),
+                radial-gradient(ellipse 9px 13px at 60% 20%, #ec407a 70%, transparent 70%),
+                radial-gradient(ellipse 8px 12px at 65% 30%, #f8bbd9 70%, transparent 70%),
+                radial-gradient(ellipse 10px 14px at 70% 15%, #f48fb1 70%, transparent 70%),
+                radial-gradient(ellipse 7px 11px at 75% 35%, #f8bbd9 70%, transparent 70%),
+                radial-gradient(ellipse 9px 13px at 80% 25%, #ec407a 70%, transparent 70%),
+                radial-gradient(ellipse 8px 12px at 85% 40%, #f8bbd9 70%, transparent 70%),
+                radial-gradient(ellipse 10px 14px at 90% 20%, #f48fb1 70%, transparent 70%),
+                radial-gradient(ellipse 7px 11px at 95% 30%, #f8bbd9 70%, transparent 70%);
+            animation: sway 4s ease-in-out infinite;
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+
+        .logo-container {
+            position: relative;
+            z-index: 10;
+            margin-top: 60px;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 20px solid rgba(255, 220, 180, 0.8);
+        }
+
+        .logo-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .logo-subtext {
+            font-size: 8px;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 2px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            min-height: calc(100vh - 280px);
+            position: relative;
+        }
+
+        /* Left Column - Category Buttons */
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            z-index: 10;
+        }
+
+        .category-btn {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 500;
+            color: white;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .category-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 20px;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.3s ease;
+        }
+
+        .category-btn:hover::after,
+        .category-btn.active::after {
+            width: calc(100% - 40px);
+        }
+
+        .category-btn.active {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Center - Plate and Product */
+        .center-column {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            position: relative;
+        }
+
+        .arrow-btn {
+            width: 60px;
+            height: 60px;
+            background: rgba(236, 64, 122, 0.8);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .arrow-btn:hover {
+            background: rgba(236, 64, 122, 1);
+            transform: scale(1.1);
+        }
+
+        .arrow-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .plate-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .plate {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(ellipse at center, #4a4a4a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            border-radius: 50%;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                inset 0 -5px 20px rgba(0, 0, 0, 0.3),
+                inset 0 5px 10px rgba(255, 255, 255, 0.1);
+            transform: perspective(500px) rotateX(15deg);
+        }
+
+        .product-wrapper {
+            position: relative;
+            width: 280px;
+            height: 350px;
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        .product-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .product-image.slide-out-right {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        .product-image.slide-in-left {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        .product-image.active {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .product-visual {
+            width: 200px;
+            height: 280px;
+            position: relative;
+        }
+
+        /* Boba Tea Visual */
+        .boba-cup {
+            width: 160px;
+            height: 220px;
+            background: linear-gradient(180deg, 
+                rgba(255, 255, 255, 0.9) 0%,
+                rgba(230, 210, 255, 0.8) 30%,
+                rgba(180, 160, 220, 0.9) 70%,
+                rgba(60, 60, 100, 0.95) 100%);
+            border-radius: 10px 10px 30px 30px;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .boba-cup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 60px;
+            background: linear-gradient(180deg, white 0%, #f0f0f0 100%);
+            border-radius: 10px 10px 50% 50%;
+        }
+
+        .boba-balls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 60px;
+        }
+
+        .boba-ball {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: radial-gradient(circle at 30% 30%, #4a3728, #1a0f0a);
+            border-radius: 50%;
+        }
+
+        .flower-accent {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+        .flower-petal {
+            position: absolute;
+            width: 15px;
+            height: 25px;
+            background: linear-gradient(180deg, #d946ef, #a855f7);
+            border-radius: 50% 50% 50% 50%;
+            transform-origin: bottom center;
+        }
+
+        /* Right Column - Action Buttons */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            z-index: 10;
+        }
+
+        .action-btn {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 400;
+            color: white;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            text-align: right;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            transform: translateX(-5px);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: linear-gradient(180deg, #fce4ec 0%, #f8bbd9 100%);
+            border-radius: 20px;
+            padding: 40px;
+            min-width: 350px;
+            max-width: 450px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 36px;
+            color: #333;
+            cursor: pointer;
+            background: none;
+            border: none;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+
+        .modal-close:hover {
+            transform: scale(1.2);
+        }
+
+        .modal-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 48px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-divider {
+            border: none;
+            border-top: 2px dotted rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
+        }
+
+        /* Cart Modal Specifics */
+        .cart-item {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .cart-item-name {
+            font-size: 20px;
+            color: #ec407a;
+            font-weight: 500;
+        }
+
+        .cart-item-price {
+            font-size: 18px;
+            color: #ec407a;
+        }
+
+        .cart-item-qty {
+            font-size: 16px;
+            color: #ec407a;
+        }
+
+        .tip-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .tip-label {
+            font-size: 18px;
+            color: #ec407a;
+            margin-bottom: 15px;
+        }
+
+        .tip-options {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tip-btn {
+            padding: 8px 16px;
+            background: rgba(236, 64, 122, 0.2);
+            border: 2px solid #ec407a;
+            border-radius: 20px;
+            color: #ec407a;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tip-btn:hover,
+        .tip-btn.active {
+            background: #ec407a;
+            color: white;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background: #ec407a;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            background: #d81b60;
+            transform: translateY(-2px);
+        }
+
+        /* Account Modal Specifics */
+        .account-link {
+            display: block;
+            text-align: center;
+            font-size: 20px;
+            color: #ec407a;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .account-link:hover {
+            color: #d81b60;
+            transform: translateX(5px);
+        }
+
+        /* Ingredients Modal Specifics */
+        .ingredient-info {
+            text-align: center;
+            color: #ec407a;
+        }
+
+        .ingredient-name {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .ingredient-flavor {
+            font-size: 16px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .ingredients-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .ingredient-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .ingredient-list li {
+            font-size: 16px;
+            padding: 5px 0;
+        }
+
+        .size-section {
+            margin-top: 20px;
+        }
+
+        .size-label {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .size-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .size-btn {
+            padding: 10px 20px;
+            background: rgba(236, 64, 122, 0.2);
+            border: 2px solid #ec407a;
+            border-radius: 20px;
+            color: #ec407a;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .size-btn:hover,
+        .size-btn.active {
+            background: #ec407a;
+            color: white;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #4caf50;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Product Name Display */
+        .product-name {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            color: white;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Search Bar (Optional) */
+        .search-container {
+            position: absolute;
+            top: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+        }
+
+        .search-input {
+            width: 250px;
+            padding: 10px 20px;
+            border: 2px solid rgba(248, 187, 217, 0.8);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #ec407a;
+            box-shadow: 0 0 10px rgba(236, 64, 122, 0.3);
+        }
+
+        .search-input::placeholder {
+            color: #ec407a;
+            opacity: 0.6;
+        }
+
+        /* Empty cart message */
+        .empty-cart {
+            text-align: center;
+            color: #ec407a;
+            font-size: 16px;
+            padding: 20px;
+        }
+
+        /* Quantity controls */
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #ec407a;
+            background: transparent;
+            color: #ec407a;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .qty-btn:hover {
+            background: #ec407a;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Floral Decoration -->
+    <header class="header">
+        <div class="floral-decoration"></div>
+        <div class="logo-container">
+            <div class="logo">
+                <div>
+                    <div class="logo-text">Fusion</div>
+                    <div class="logo-subtext">Delicias Cafe</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Optional Search Bar -->
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search menu..." id="searchInput">
+    </div>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Left Column - Category Buttons -->
+        <div class="left-column">
+            <button class="category-btn active" data-category="drinks">Drinks</button>
+            <button class="category-btn" data-category="food">Food</button>
+            <button class="category-btn" data-category="pastries">Pastries</button>
+        </div>
+
+        <!-- Center - Plate and Product -->
+        <div class="center-column">
+            <button class="arrow-btn" id="prevBtn" aria-label="Previous item">
+                <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            </button>
+
+            <div class="plate-container">
+                <div class="plate"></div>
+                <div class="product-wrapper">
+                    <div class="product-image active" id="productDisplay">
+                        <!-- Product will be rendered here -->
+                    </div>
+                </div>
+                <div class="product-name" id="productName">Lavender Boba Latte</div>
+            </div>
+
+            <button class="arrow-btn" id="nextBtn" aria-label="Next item">
+                <svg viewBox="0 0 24 24"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+            </button>
+        </div>
+
+        <!-- Right Column - Action Buttons -->
+        <div class="right-column">
+            <button class="action-btn" id="addToOrderBtn">Add to Order</button>
+            <button class="action-btn" id="ingredientsBtn">Ingredients</button>
+            <button class="action-btn" id="accountBtn">Account</button>
+            <button class="action-btn" id="cartBtn">Cart</button>
+        </div>
+    </main>
+
+    <!-- Ingredients Modal -->
+    <div class="modal-overlay" id="ingredientsModal">
+        <div class="modal-card">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <h2 class="modal-title" id="ingredientsTitle">Boba Tea</h2>
+            <hr class="modal-divider">
+            <div class="ingredient-info">
+                <div class="ingredient-name" id="ingredientItemName">[name]</div>
+                <div class="ingredient-flavor" id="ingredientFlavor">[flavor/flavor profile]</div>
+                <div class="ingredients-title">[ingredients]</div>
+                <ul class="ingredient-list" id="ingredientList">
+                    <!-- Ingredients will be populated here -->
+                </ul>
+                <div class="size-section" id="sizeSection">
+                    <div class="size-label">Select Size:</div>
+                    <div class="size-options">
+                        <button class="size-btn" data-size="small">Small</button>
+                        <button class="size-btn active" data-size="medium">Medium</button>
+                        <button class="size-btn" data-size="large">Large</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-card">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <h2 class="modal-title">Cart</h2>
+            <hr class="modal-divider">
+            <div id="cartItems">
+                <!-- Cart items will be populated here -->
+            </div>
+            <div class="tip-section">
+                <div class="tip-label">Leave Tip</div>
+                <div class="tip-options">
+                    <button class="tip-btn" data-tip="5">5%</button>
+                    <button class="tip-btn" data-tip="10">10%</button>
+                    <button class="tip-btn" data-tip="15">15%</button>
+                    <button class="tip-btn" data-tip="custom">Custom</button>
+                </div>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">Continue with Checkout</button>
+        </div>
+    </div>
+
+    <!-- Account Modal -->
+    <div class="modal-overlay" id="accountModal">
+        <div class="modal-card">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <h2 class="modal-title">Account</h2>
+            <hr class="modal-divider">
+            <a class="account-link" href="#" id="previousOrdersLink">Previous Orders</a>
+            <a class="account-link" href="#" id="favoritesLink">Favorites</a>
+            <a class="account-link" href="#" id="reviewsLink">Reviews</a>
+            <a class="account-link" href="#" id="signInLink">Sign In / Sign Out</a>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">Added to cart!</div>
+
+    <script>
+        // Product Data
+        const products = {
+            drinks: [
+                {
+                    id: 1,
+                    name: 'Lavender Boba Latte',
+                    price: 6,
+                    flavor: 'Floral, Creamy, Sweet',
+                    ingredients: ['Whole Milk', 'Boba Balls', 'Whip Cream', 'Accent Flower', 'Lavender Syrup'],
+                    type: 'drink',
+                    color: '#e6d2ff'
+                },
+                {
+                    id: 2,
+                    name: 'Green Tea',
+                    price: 4,
+                    flavor: 'Earthy, Fresh, Light',
+                    ingredients: ['Green Tea', 'Hot Water', 'Honey (optional)'],
+                    type: 'drink',
+                    color: '#90EE90'
+                },
+                {
+                    id: 3,
+                    name: 'Taro Milk Tea',
+                    price: 5.50,
+                    flavor: 'Sweet, Nutty, Creamy',
+                    ingredients: ['Taro Powder', 'Milk', 'Boba Balls', 'Sugar'],
+                    type: 'drink',
+                    color: '#DDA0DD'
+                },
+                {
+                    id: 4,
+                    name: 'Mango Smoothie',
+                    price: 5,
+                    flavor: 'Tropical, Sweet, Refreshing',
+                    ingredients: ['Fresh Mango', 'Yogurt', 'Ice', 'Honey'],
+                    type: 'drink',
+                    color: '#FFD700'
+                }
+            ],
+            food: [
+                {
+                    id: 5,
+                    name: 'Avocado Toast',
+                    price: 8,
+                    flavor: 'Savory, Fresh, Healthy',
+                    ingredients: ['Sourdough Bread', 'Avocado', 'Cherry Tomatoes', 'Feta Cheese', 'Everything Seasoning'],
+                    type: 'food',
+                    color: '#98FB98'
+                },
+                {
+                    id: 6,
+                    name: 'Chicken Sandwich',
+                    price: 10,
+                    flavor: 'Hearty, Savory, Satisfying',
+                    ingredients: ['Grilled Chicken', 'Lettuce', 'Tomato', 'Mayo', 'Brioche Bun'],
+                    type: 'food',
+                    color: '#DEB887'
+                },
+                {
+                    id: 7,
+                    name: 'Fruit Bowl',
+                    price: 7,
+                    flavor: 'Fresh, Sweet, Light',
+                    ingredients: ['Strawberries', 'Blueberries', 'Banana', 'Granola', 'Greek Yogurt'],
+                    type: 'food',
+                    color: '#FFB6C1'
+                }
+            ],
+            pastries: [
+                {
+                    id: 8,
+                    name: 'Croissant',
+                    price: 4,
+                    flavor: 'Buttery, Flaky, Classic',
+                    ingredients: ['Butter', 'Flour', 'Yeast', 'Sugar', 'Salt'],
+                    type: 'pastry',
+                    color: '#F5DEB3'
+                },
+                {
+                    id: 9,
+                    name: 'Strawberry Tart',
+                    price: 5.50,
+                    flavor: 'Sweet, Fruity, Delicate',
+                    ingredients: ['Pastry Crust', 'Custard', 'Fresh Strawberries', 'Glaze'],
+                    type: 'pastry',
+                    color: '#FF6B6B'
+                },
+                {
+                    id: 10,
+                    name: 'Chocolate Muffin',
+                    price: 3.50,
+                    flavor: 'Rich, Sweet, Decadent',
+                    ingredients: ['Chocolate', 'Flour', 'Eggs', 'Sugar', 'Cocoa Powder'],
+                    type: 'pastry',
+                    color: '#8B4513'
+                }
+            ]
+        };
+
+        // State
+        let currentCategory = 'drinks';
+        let currentIndex = 0;
+        let cart = [];
+        let selectedSize = 'medium';
+        let selectedTip = 0;
+
+        // DOM Elements
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const productDisplay = document.getElementById('productDisplay');
+        const productName = document.getElementById('productName');
+        const addToOrderBtn = document.getElementById('addToOrderBtn');
+        const ingredientsBtn = document.getElementById('ingredientsBtn');
+        const accountBtn = document.getElementById('accountBtn');
+        const cartBtn = document.getElementById('cartBtn');
+        const notification = document.getElementById('notification');
+        const searchInput = document.getElementById('searchInput');
+
+        // Modals
+        const ingredientsModal = document.getElementById('ingredientsModal');
+        const cartModal = document.getElementById('cartModal');
+        const accountModal = document.getElementById('accountModal');
+
+        // Initialize
+        function init() {
+            renderProduct();
+            setupEventListeners();
+        }
+
+        // Render Product Visual
+        function renderProduct(direction = 'none') {
+            const product = products[currentCategory][currentIndex];
+            
+            if (direction !== 'none') {
+                productDisplay.classList.add('slide-out-right');
+                
+                setTimeout(() => {
+                    productDisplay.innerHTML = createProductVisual(product);
+                    productDisplay.classList.remove('slide-out-right');
+                    productDisplay.classList.add('slide-in-left');
+                    
+                    setTimeout(() => {
+                        productDisplay.classList.remove('slide-in-left');
+                        productDisplay.classList.add('active');
+                    }, 50);
+                }, 250);
+            } else {
+                productDisplay.innerHTML = createProductVisual(product);
+            }
+            
+            productName.textContent = product.name;
+        }
+
+        function createProductVisual(product) {
+            if (product.type === 'drink') {
+                return `
+                    <div class="product-visual">
+                        <div class="boba-cup" style="background: linear-gradient(180deg, 
+                            rgba(255, 255, 255, 0.9) 0%,
+                            ${product.color} 30%,
+                            ${adjustColor(product.color, -30)} 70%,
+                            ${adjustColor(product.color, -60)} 100%);">
+                            <div class="boba-balls">
+                                <div class="boba-ball" style="left: 10px; bottom: 5px;"></div>
+                                <div class="boba-ball" style="left: 35px; bottom: 0;"></div>
+                                <div class="boba-ball" style="left: 60px; bottom: 8px;"></div>
+                                <div class="boba-ball" style="left: 85px; bottom: 3px;"></div>
+                                <div class="boba-ball" style="left: 20px; bottom: 25px;"></div>
+                                <div class="boba-ball" style="left: 50px; bottom: 22px;"></div>
+                                <div class="boba-ball" style="left: 75px; bottom: 28px;"></div>
+                            </div>
+                            <div class="flower-accent">
+                                <div class="flower-petal" style="transform: rotate(0deg) translateY(-10px);"></div>
+                                <div class="flower-petal" style="transform: rotate(72deg) translateY(-10px);"></div>
+                                <div class="flower-petal" style="transform: rotate(144deg) translateY(-10px);"></div>
+                                <div class="flower-petal" style="transform: rotate(216deg) translateY(-10px);"></div>
+                                <div class="flower-petal" style="transform: rotate(288deg) translateY(-10px);"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (product.type === 'food') {
+                return `
+                    <div class="product-visual" style="display: flex; align-items: center; justify-content: center;">
+                        <div style="width: 180px; height: 120px; background: ${product.color}; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 48px;">🍽️</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="product-visual" style="display: flex; align-items: center; justify-content: center;">
+                        <div style="width: 150px; height: 150px; background: ${product.color}; border-radius: 50% 50% 45% 45%; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 48px;">🥐</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function adjustColor(color, amount) {
+            const hex = color.replace('#', '');
+            const r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount));
+            const g = Math.max(0, Math.min(255, parseInt(hex.substr(2, 2), 16) + amount));
+            const b = Math.max(0, Math.min(255, parseInt(hex.substr(4, 2), 16) + amount));
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Category buttons
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const category = btn.dataset.category;
+                    if (category !== currentCategory) {
+                        categoryBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        currentCategory = category;
+                        currentIndex = 0;
+                        renderProduct('left');
+                    }
+                });
+            });
+
+            // Arrow navigation
+            prevBtn.addEventListener('click', () => {
+                const categoryProducts = products[currentCategory];
+                currentIndex = (currentIndex - 1 + categoryProducts.length) % categoryProducts.length;
+                renderProduct('left');
+            });
+
+            nextBtn.addEventListener('click', () => {
+                const categoryProducts = products[currentCategory];
+                currentIndex = (currentIndex + 1) % categoryProducts.length;
+                renderProduct('left');
+            });
+
+            // Add to Order
+            addToOrderBtn.addEventListener('click', () => {
+                const product = products[currentCategory][currentIndex];
+                addToCart(product);
+            });
+
+            // Ingredients button
+            ingredientsBtn.addEventListener('click', () => {
+                openIngredientsModal();
+            });
+
+            // Account button
+            accountBtn.addEventListener('click', () => {
+                openModal(accountModal);
+            });
+
+            // Cart button
+            cartBtn.addEventListener('click', () => {
+                openCartModal();
+            });
+
+            // Close modals
+            document.querySelectorAll('.modal-close').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.target.closest('.modal-overlay').classList.remove('active');
+                });
+            });
+
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
+            });
+
+            // Size buttons
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedSize = btn.dataset.size;
+                });
+            });
+
+            // Tip buttons
+            document.querySelectorAll('.tip-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedTip = btn.dataset.tip === 'custom' ? 0 : parseInt(btn.dataset.tip);
+                });
+            });
+
+            // Checkout button
+            document.getElementById('checkoutBtn').addEventListener('click', () => {
+                if (cart.length > 0) {
+                    showNotification('Proceeding to checkout...');
+                    // Here you would integrate with Shopify checkout
+                }
+            });
+
+            // Search functionality
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                if (query.length > 0) {
+                    searchProducts(query);
+                }
+            });
+        }
+
+        // Add to Cart
+        function addToCart(product) {
+            const existingItem = cart.find(item => item.id === product.id && item.size === selectedSize);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1,
+                    size: product.type === 'drink' ? selectedSize : null
+                });
+            }
+            
+            showNotification(`${product.name} added to cart!`);
+        }
+
+        // Open Modals
+        function openModal(modal) {
+            modal.classList.add('active');
+        }
+
+        function openIngredientsModal() {
+            const product = products[currentCategory][currentIndex];
+            
+            document.getElementById('ingredientsTitle').textContent = 
+                product.type === 'drink' ? 'Boba Tea' : product.type === 'food' ? 'Food' : 'Pastry';
+            document.getElementById('ingredientItemName').textContent = product.name;
+            document.getElementById('ingredientFlavor').textContent = product.flavor;
+            
+            const ingredientList = document.getElementById('ingredientList');
+            ingredientList.innerHTML = product.ingredients.map(ing => `<li>${ing}</li>`).join('');
+            
+            // Show/hide size section based on product type
+            const sizeSection = document.getElementById('sizeSection');
+            sizeSection.style.display = product.type === 'drink' ? 'block' : 'none';
+            
+            openModal(ingredientsModal);
+        }
+
+        function openCartModal() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+            } else {
+                cartItemsContainer.innerHTML = cart.map((item, index) => `
+                    <div class="cart-item">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                        <div class="qty-controls">
+                            <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                            <span class="cart-item-qty">[${item.quantity}]</span>
+                            <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            openModal(cartModal);
+        }
+
+        // Update cart quantity
+        function updateQuantity(index, change) {
+            cart[index].quantity += change;
+            
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            
+            openCartModal(); // Refresh cart display
+        }
+
+        // Make updateQuantity available globally
+        window.updateQuantity = updateQuantity;
+
+        // Show Notification
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+        // Search Products
+        function searchProducts(query) {
+            for (const category in products) {
+                const index = products[category].findIndex(p => 
+                    p.name.toLowerCase().includes(query)
+                );
+                
+                if (index !== -1) {
+                    currentCategory = category;
+                    currentIndex = index;
+                    
+                    categoryBtns.forEach(btn => {
+                        btn.classList.toggle('active', btn.dataset.category === category);
+                    });
+                    
+                    renderProduct('left');
+                    break;
+                }
+            }
+        }
+
+        // Initialize app
+        init();
+    </script>
+</body>
+</html>
