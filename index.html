@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cafe Template — Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Optional: Poppins (fallbacks to system fonts if unavailable) -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- Decorative flowers (2D flat placeholders) -->
+    <div class="decor" aria-hidden="true">
+      <div class="flower flower--1"></div>
+      <div class="flower flower--2"></div>
+      <div class="flower flower--3"></div>
+      <div class="flower flower--4"></div>
+    </div>
+
+    <header class="topbar fade-in" data-fade>
+      <a class="logo fade-in-delayed" data-fade-logo href="./about.html" aria-label="Go to About page">
+        <span class="logo__mark" aria-hidden="true"></span>
+        <span class="logo__text">Logo</span>
+      </a>
+
+      <nav class="topnav" aria-label="Primary navigation">
+        <a class="topnav__link" href="#" data-open-account>Account</a>
+        <a class="topnav__link" href="./cart.html">
+          Cart
+          <span class="pill" data-cart-count>0</span>
+        </a>
+      </nav>
+    </header>
+
+    <main class="layout">
+      <!-- Left: categories (desktop). On mobile, this becomes a horizontal scroll row. -->
+      <aside class="categories fade-in" data-fade>
+        <h2 class="sr-only">Categories</h2>
+        <div class="categories__list" role="tablist" aria-label="Menu categories" data-categories></div>
+      </aside>
+
+      <!-- Center: plate/display area -->
+      <section class="plate-area" aria-label="Menu items">
+        <div class="plate plate--enter" data-plate>
+          <div class="plate__header fade-in" data-fade>
+            <h1 class="h1" data-category-title>Category A</h1>
+            <p class="muted" data-category-desc>
+              Placeholder description for the selected category.
+            </p>
+          </div>
+
+          <div class="items-grid" data-items></div>
+        </div>
+      </section>
+
+      <!-- Right: details panel (desktop) / below on mobile -->
+      <aside class="details fade-in" data-fade aria-label="Selected item details">
+        <div class="details__card">
+          <div class="thumb" aria-hidden="true">
+            <div class="thumb__art"></div>
+          </div>
+
+          <div class="details__body">
+            <h2 class="h2" data-item-title>Item 1</h2>
+            <p class="muted" data-item-desc>
+              Placeholder item description. Swap this text later with real details.
+            </p>
+
+            <div class="row">
+              <div class="price" data-item-price>$0.00</div>
+              <div class="chip" data-item-category>Category A</div>
+            </div>
+
+            <div class="actions">
+              <button class="btn btn--primary" type="button" data-add-to-order>
+                Add to Order
+              </button>
+              <button class="btn btn--ghost" type="button" data-open-ingredients>
+                Ingredients
+              </button>
+            </div>
+
+            <p class="note">
+              Pickup only (delivery coming soon).
+            </p>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Ingredients Modal -->
+    <dialog class="modal" data-modal="ingredients" aria-label="Ingredients and allergen info">
+      <div class="modal__card">
+        <button class="icon-btn modal__close" type="button" data-close-modal aria-label="Close">
+          ✕
+        </button>
+        <div class="modal__header">
+          <div class="modal__art" aria-hidden="true"></div>
+          <div>
+            <h3 class="h3" data-ing-title>Ingredients</h3>
+            <p class="muted" data-ing-subtitle>Notepad-style placeholder info.</p>
+          </div>
+        </div>
+
+        <div class="modal__content">
+          <div class="notepad">
+            <h4 class="h4">Ingredients (placeholder)</h4>
+            <ul class="list" data-ing-list></ul>
+
+            <h4 class="h4">Allergens (placeholder)</h4>
+            <div class="allergens" data-allergen-list></div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Account Modal -->
+    <dialog class="modal" data-modal="account" aria-label="Account and loyalty program">
+      <div class="modal__card">
+        <button class="icon-btn modal__close" type="button" data-close-modal aria-label="Close">
+          ✕
+        </button>
+        <div class="modal__header">
+          <div class="modal__art modal__art--account" aria-hidden="true"></div>
+          <div>
+            <h3 class="h3">Account</h3>
+            <p class="muted">Placeholder user info + loyalty program.</p>
+          </div>
+        </div>
+        <div class="modal__content">
+          <div class="card">
+            <div class="card__row">
+              <div>
+                <div class="label">Name</div>
+                <div class="value">User Name</div>
+              </div>
+              <div>
+                <div class="label">Email</div>
+                <div class="value">user@example.com</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4 class="h4">Loyalty Program</h4>
+            <p class="muted">
+              You earn <strong>+1 point</strong> per added item (stored in localStorage).
+            </p>
+            <div class="progress">
+              <div class="progress__bar" data-points-bar style="width: 0%"></div>
+            </div>
+            <div class="row row--space">
+              <div class="chip" data-points-text>0 points</div>
+              <div class="muted">Goal: 10 points toward free item</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Floating Chat -->
+    <button class="chat-fab" type="button" aria-label="Open chat" data-open-chat>
+      <span aria-hidden="true">?</span>
+    </button>
+    <dialog class="modal" data-modal="chat" aria-label="Chatbox">
+      <div class="modal__card">
+        <button class="icon-btn modal__close" type="button" data-close-modal aria-label="Close">
+          ✕
+        </button>
+        <div class="modal__header">
+          <div class="modal__art modal__art--chat" aria-hidden="true"></div>
+          <div>
+            <h3 class="h3">Questions</h3>
+            <p class="muted">Ask about ingredients or allergies (placeholder).</p>
+          </div>
+        </div>
+        <div class="modal__content">
+          <form class="form" data-chat-form>
+            <label class="field">
+              <span class="field__label">Message</span>
+              <textarea class="field__input" name="message" rows="4" placeholder="Type your question..."></textarea>
+            </label>
+            <label class="field">
+              <span class="field__label">Email</span>
+              <input class="field__input" type="email" name="email" placeholder="you@example.com" />
+            </label>
+            <button class="btn btn--primary" type="submit">Submit</button>
+            <p class="muted" data-chat-status></p>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

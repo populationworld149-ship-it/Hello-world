@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cafe Template — About</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="decor" aria-hidden="true">
+      <div class="flower flower--1"></div>
+      <div class="flower flower--2"></div>
+      <div class="flower flower--3"></div>
+      <div class="flower flower--4"></div>
+    </div>
+
+    <header class="topbar fade-in" data-fade>
+      <a class="logo fade-in-delayed" data-fade-logo href="./about.html" aria-label="Go to About page">
+        <span class="logo__mark" aria-hidden="true"></span>
+        <span class="logo__text">Logo</span>
+      </a>
+
+      <nav class="topnav" aria-label="Primary navigation">
+        <a class="topnav__link" href="./index.html">Menu</a>
+        <a class="topnav__link" href="#" data-open-account>Account</a>
+        <a class="topnav__link" href="./cart.html">
+          Cart
+          <span class="pill" data-cart-count>0</span>
+        </a>
+      </nav>
+    </header>
+
+    <main class="page fade-in" data-fade>
+      <section class="page__hero">
+        <div class="hero__art" aria-hidden="true"></div>
+        <div>
+          <h1 class="h1">About</h1>
+          <p class="muted">
+            Placeholder cafe/business info. Replace this copy with your real story, hours,
+            location, and brand voice later.
+          </p>
+          <div class="card">
+            <h4 class="h4">Pickup Only</h4>
+            <p class="muted">Pickup only (delivery coming soon).</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="page__grid">
+        <div class="card">
+          <h3 class="h3">What We Offer</h3>
+          <p class="muted">
+            Placeholder categories, placeholder items, and clean 2D illustration style.
+          </p>
+          <ul class="list">
+            <li>Category A</li>
+            <li>Category B</li>
+            <li>Category C</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="h3">Brand Feel</h3>
+          <p class="muted">
+            Pink + white backgrounds, dark blue text/buttons, lots of whitespace, and
+            smooth animations.
+          </p>
+        </div>
+        <div class="card">
+          <h3 class="h3">Contact</h3>
+          <p class="muted">
+            Placeholder contact info. Use the chat button for questions about ingredients/allergies.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Account Modal -->
+    <dialog class="modal" data-modal="account" aria-label="Account and loyalty program">
+      <div class="modal__card">
+        <button class="icon-btn modal__close" type="button" data-close-modal aria-label="Close">
+          ✕
+        </button>
+        <div class="modal__header">
+          <div class="modal__art modal__art--account" aria-hidden="true"></div>
+          <div>
+            <h3 class="h3">Account</h3>
+            <p class="muted">Placeholder user info + loyalty program.</p>
+          </div>
+        </div>
+        <div class="modal__content">
+          <div class="card">
+            <div class="card__row">
+              <div>
+                <div class="label">Name</div>
+                <div class="value">User Name</div>
+              </div>
+              <div>
+                <div class="label">Email</div>
+                <div class="value">user@example.com</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4 class="h4">Loyalty Program</h4>
+            <p class="muted">
+              You earn <strong>+1 point</strong> per added item (stored in localStorage).
+            </p>
+            <div class="progress">
+              <div class="progress__bar" data-points-bar style="width: 0%"></div>
+            </div>
+            <div class="row row--space">
+              <div class="chip" data-points-text>0 points</div>
+              <div class="muted">Goal: 10 points toward free item</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Floating Chat -->
+    <button class="chat-fab" type="button" aria-label="Open chat" data-open-chat>
+      <span aria-hidden="true">?</span>
+    </button>
+    <dialog class="modal" data-modal="chat" aria-label="Chatbox">
+      <div class="modal__card">
+        <button class="icon-btn modal__close" type="button" data-close-modal aria-label="Close">
+          ✕
+        </button>
+        <div class="modal__header">
+          <div class="modal__art modal__art--chat" aria-hidden="true"></div>
+          <div>
+            <h3 class="h3">Questions</h3>
+            <p class="muted">Ask about ingredients or allergies (placeholder).</p>
+          </div>
+        </div>
+        <div class="modal__content">
+          <form class="form" data-chat-form>
+            <label class="field">
+              <span class="field__label">Message</span>
+              <textarea class="field__input" name="message" rows="4" placeholder="Type your question..."></textarea>
+            </label>
+            <label class="field">
+              <span class="field__label">Email</span>
+              <input class="field__input" type="email" name="email" placeholder="you@example.com" />
+            </label>
+            <button class="btn btn--primary" type="submit">Submit</button>
+            <p class="muted" data-chat-status></p>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
