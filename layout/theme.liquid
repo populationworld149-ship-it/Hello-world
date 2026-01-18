@@ -27,276 +27,767 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <!-- Cafe template styles (scoped via .cafe-template body class) -->
-    {{ 'cafe-template.css' | asset_url | stylesheet_tag }}
-
     {{ content_for_header }}
+
+    <style>
+      /* =========================================================
+        FULL-SCREEN HOME CAROUSEL THEME (matches provided design)
+        - Pink background
+        - Hanging flowers top image
+        - Center logo on pink card
+        - Center plate/product carousel with left/right arrows
+        - Positioned nav links around the plate
+        - Popup card overlay for cart/account/info
+        - Ingredients modal (notepad style)
+      ========================================================== */
+
+      /* Hide default Shopify header/footer sections */
+      #shopify-section-header,
+      #shopify-section-footer,
+      .shopify-section,
+      header,
+      footer {
+        display: none !important;
+      }
+
+      * {
+        box-sizing: border-box !important;
+      }
+
+      html {
+        height: 100%;
+        width: 100%;
+      }
+
+      body {
+        margin: 0 !important;
+        font-family: Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+        background: #e84c8f !important;
+        color: #ffffff !important;
+      }
+
+      /* Full-screen only for homepage */
+      body.template-index,
+      body.template-index #MainContent {
+        height: 100vh !important;
+        width: 100vw !important;
+        overflow: hidden !important;
+      }
+
+      #MainContent {
+        width: 100%;
+        position: relative;
+      }
+
+      /* Hanging flowers */
+      .floral-top {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        z-index: 20 !important;
+        pointer-events: none !important;
+        transform: translateY(-48px);
+        opacity: 0;
+      }
+
+      .floral-top img {
+        width: 100% !important;
+        height: 45vh !important;
+        object-fit: cover !important;
+        display: block !important;
+      }
+
+      /* Center logo (pink card) */
+      .fusion-logo {
+        position: fixed !important;
+        top: 18px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 100 !important;
+        width: 300px !important;
+        height: 108px !important;
+        background: url('https://cdn.shopify.com/s/files/1/0723/4302/7849/files/pink_card.png?v=1768585833') no-repeat center/contain !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        opacity: 0;
+      }
+
+      .fusion-logo-img {
+        width: 140px !important;
+        height: auto !important;
+        display: block !important;
+      }
+
+      /* Main carousel container */
+      .home-carousel {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 10 !important;
+      }
+
+      /* Navigation items positioned around the plate */
+      .nav-item {
+        position: fixed !important;
+        color: white !important;
+        font-size: 26px !important;
+        font-weight: 400 !important;
+        text-decoration: none !important;
+        z-index: 50 !important;
+        text-shadow: 1px 1px 6px rgba(0,0,0,0.25) !important;
+        transition: transform 0.25s ease, text-shadow 0.25s ease, opacity 1.2s ease !important;
+        cursor: pointer !important;
+        opacity: 0;
+      }
+
+      .nav-item:hover {
+        transform: scale(1.08) !important;
+        text-shadow: 3px 3px 12px rgba(0,0,0,0.5) !important;
+      }
+
+      .nav-drinks { top: 58% !important; left: 28px !important; }
+      .nav-food { top: 70% !important; left: 40px !important; text-transform: lowercase; }
+      .nav-pastry { bottom: 70px !important; left: 32% !important; transform: translateX(-50%) !important; }
+
+      .nav-order { top: 58% !important; right: 28px !important; text-transform: lowercase; }
+      .nav-account { top: 70% !important; right: 40px !important; }
+      .nav-info { bottom: 70px !important; right: 10% !important; transform: translateX(50%) !important; text-transform: lowercase; }
+
+      /* Carousel arrows */
+      .carousel-nav {
+        position: fixed !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        width: 64px !important;
+        height: 64px !important;
+        border-radius: 50% !important;
+        background: #f7b7d1 !important;
+        border: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 36px !important;
+        color: #e84c8f !important;
+        cursor: pointer !important;
+        z-index: 60 !important;
+        transition: transform 0.25s ease, background 0.25s ease, opacity 1.2s ease !important;
+        opacity: 0;
+      }
+
+      .carousel-nav:hover {
+        background: #f3a8c8 !important;
+        transform: translateY(-50%) scale(1.08) !important;
+      }
+
+      .carousel-prev { left: 10% !important; }
+      .carousel-next { right: 10% !important; }
+
+      /* Product slides */
+      .product-slide {
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: opacity 0.35s ease !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        will-change: transform, opacity;
+      }
+
+      .product-slide.active {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+      }
+
+      .product-slide.slide-in-left {
+        animation: slideInLeft 420ms ease both;
+      }
+      .product-slide.slide-out-right {
+        animation: slideOutRight 360ms ease both;
+      }
+
+      @keyframes slideInLeft {
+        from { opacity: 0; transform: translate(calc(-50% - 18px), -50%); }
+        to { opacity: 1; transform: translate(-50%, -50%); }
+      }
+      @keyframes slideOutRight {
+        to { opacity: 0; transform: translate(calc(-50% + 18px), -50%); }
+      }
+
+      /* Plate platform */
+      .plate-platform {
+        width: 560px !important;
+        height: 520px !important;
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-bottom: 10px !important;
+        opacity: 0;
+        transform: translateX(-18px);
+      }
+
+      .plate-bg {
+        position: absolute !important;
+        width: 92% !important;
+        height: auto !important;
+        bottom: 0 !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        filter: drop-shadow(0 16px 28px rgba(0,0,0,0.4)) !important;
+      }
+
+      .product-image {
+        position: relative !important;
+        width: 52% !important;
+        height: auto !important;
+        z-index: 2 !important;
+        margin-top: -20px !important;
+        filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3)) !important;
+      }
+
+      /* "Add to order" + "ingredients" text links */
+      .action-link {
+        background: transparent !important;
+        color: #ffffff !important;
+        border: none !important;
+        padding: 0 !important;
+        font-size: 24px !important;
+        font-weight: 400 !important;
+        border-radius: 0 !important;
+        cursor: pointer !important;
+        text-decoration: none !important;
+        display: inline-block !important;
+        box-shadow: none !important;
+        transition: transform 0.25s ease, text-shadow 0.25s ease, opacity 1.2s ease !important;
+        opacity: 0;
+        text-shadow: 1px 1px 6px rgba(0,0,0,0.25) !important;
+      }
+
+      .action-link:hover {
+        transform: translateY(-2px) scale(1.03) !important;
+        text-shadow: 0 0 12px rgba(255,255,255,0.6) !important;
+      }
+
+      .action-add {
+        position: fixed !important;
+        bottom: 70px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 55 !important;
+      }
+
+      .action-ingredients {
+        position: fixed !important;
+        bottom: 70px !important;
+        left: 72% !important;
+        transform: translateX(-50%) !important;
+        z-index: 55 !important;
+        text-transform: lowercase;
+      }
+
+      /* Popup card overlay */
+      .popup-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(0, 0, 0, 0.35) !important;
+        display: none !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 200 !important;
+      }
+
+      .popup-overlay.is-open {
+        display: flex !important;
+      }
+
+      .popup-card {
+        width: 240px !important;
+        height: 320px !important;
+        background: url('https://cdn.shopify.com/s/files/1/0723/4302/7849/files/pink_card.png?v=1768585833') no-repeat center/contain !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 30px 20px !important;
+        text-align: center !important;
+        position: relative !important;
+      }
+
+      .popup-title {
+        font-size: 22px !important;
+        color: #2f2f2f !important;
+        margin-bottom: 8px !important;
+        font-weight: 600 !important;
+      }
+
+      .popup-actions {
+        position: absolute !important;
+        left: 50% !important;
+        top: 58% !important;
+        transform: translateX(-50%) !important;
+        display: flex !important;
+        gap: 12px !important;
+        justify-content: center !important;
+        flex-wrap: nowrap !important;
+      }
+
+      .popup-actions a {
+        color: #2f2f2f !important;
+        text-decoration: none !important;
+        background: #fff !important;
+        border-radius: 24px !important;
+        padding: 8px 16px !important;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.15) !important;
+        font-size: 14px !important;
+      }
+
+      .popup-close {
+        position: absolute !important;
+        top: 8px !important;
+        right: 10px !important;
+        background: transparent !important;
+        border: none !important;
+        font-size: 20px !important;
+        color: #2f2f2f !important;
+        cursor: pointer !important;
+      }
+
+      /* Ingredients modal (simple notepad card) */
+      .ing-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 210;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,0.35);
+        padding: 18px;
+      }
+      .ing-modal.is-open {
+        display: flex;
+      }
+      .ing-card {
+        width: min(640px, 100%);
+        background: rgba(255,255,255,0.95);
+        border-radius: 24px;
+        padding: 18px 18px 16px;
+        color: #2f2f2f;
+        box-shadow: 0 22px 60px rgba(0,0,0,0.22);
+        position: relative;
+      }
+      .ing-close {
+        position: absolute;
+        top: 10px;
+        right: 12px;
+        background: transparent;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: #2f2f2f;
+      }
+      .ing-title {
+        margin: 0 0 8px;
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .ing-note {
+        background: rgba(232, 76, 143, 0.08);
+        border: 1px dashed rgba(0,0,0,0.18);
+        border-radius: 18px;
+        padding: 12px 12px 10px;
+      }
+      .ing-note h4 {
+        margin: 10px 0 8px;
+        font-size: 14px;
+      }
+      .ing-list {
+        margin: 0;
+        padding-left: 18px;
+        line-height: 1.55;
+        font-size: 14px;
+      }
+      .allergen-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .tag {
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.12);
+        font-weight: 600;
+      }
+
+      /* Page-load animations */
+      body.is-loaded .floral-top {
+        animation: flowerDrop 1700ms cubic-bezier(0.22, 0.9, 0.18, 1) forwards;
+      }
+
+      body.is-loaded .fusion-logo {
+        animation: fadeIn 1200ms ease forwards;
+        animation-delay: 500ms;
+      }
+
+      body.is-loaded .plate-platform {
+        animation: plateIn 900ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
+
+      body.is-loaded .nav-item,
+      body.is-loaded .carousel-nav,
+      body.is-loaded .action-link {
+        animation: fadeIn 1200ms ease forwards;
+      }
+
+      @keyframes fadeIn {
+        to { opacity: 1; }
+      }
+
+      @keyframes flowerDrop {
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes plateIn {
+        to { opacity: 1; transform: translateX(0); }
+      }
+
+      /* Mobile responsive */
+      @media (max-width: 768px) {
+        .fusion-logo {
+          width: 240px !important;
+          height: 90px !important;
+          top: 12px !important;
+        }
+
+        .fusion-logo-img {
+          width: 115px !important;
+        }
+
+        .nav-item {
+          font-size: 18px !important;
+        }
+
+        .nav-drinks { top: 55% !important; left: 20px !important; }
+        .nav-food { top: 67% !important; left: 28px !important; }
+        .nav-pastry { bottom: 60px !important; left: 32% !important; }
+
+        .nav-order { top: 55% !important; right: 20px !important; font-size: 16px !important; }
+        .nav-account { top: 67% !important; right: 28px !important; }
+        .nav-info { bottom: 60px !important; right: 10% !important; font-size: 16px !important; }
+
+        .carousel-nav {
+          width: 52px !important;
+          height: 52px !important;
+          font-size: 30px !important;
+        }
+
+        .carousel-prev { left: 5% !important; }
+        .carousel-next { right: 5% !important; }
+
+        .plate-platform {
+          width: 360px !important;
+          height: 340px !important;
+        }
+
+        .action-link {
+          font-size: 18px !important;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+        }
+      }
+    </style>
   </head>
 
-  <body class="cafe-template">
-    <!-- Decorative flowers (flat/vector-style placeholders) -->
-    <div class="decor" aria-hidden="true">
-      <div class="flower flower--1"></div>
-      <div class="flower flower--2"></div>
-      <div class="flower flower--3"></div>
-      <div class="flower flower--4"></div>
-    </div>
+  <body class="template-{{ template.name }}{% if template.name == 'index' %} template-index{% endif %}">
+    {% if template.name == 'index' %}
+      <!-- Floral background at top -->
+      <div class="floral-top" aria-hidden="true">
+        <img src="https://cdn.shopify.com/s/files/1/0723/4302/7849/files/pink_drop_down.png?v=1768585497" alt="">
+      </div>
 
-    <header class="topbar" data-fade>
-      <!-- Logo click → About page -->
-      <a
-        class="logo"
-        data-fade-logo
-        href="{{ pages['about'].url | default: '/pages/about' }}"
-        aria-label="Go to About page"
-      >
-        <span class="logo__mark" aria-hidden="true"></span>
-        <span class="logo__text">Logo</span>
+      <!-- Logo -->
+      <a class="fusion-logo" href="{{ pages['about'].url | default: '/pages/about' }}" aria-label="About">
+        <img
+          src="https://cdn.shopify.com/s/files/1/0723/4302/7849/files/Photoroom_20251201_125051.png?v=1765222302"
+          alt="Logo"
+          class="fusion-logo-img"
+        >
       </a>
 
-      <nav class="topnav" aria-label="Primary navigation">
-        <!-- Keep href as a fallback; JS prevents default to open modal -->
-        <a class="topnav__link" href="{{ routes.account_url }}" data-open-account>Account</a>
-        <a class="topnav__link" href="{{ routes.cart_url }}">
-          Cart
-          <span class="pill" data-cart-count>{{ cart.item_count }}</span>
-        </a>
-      </nav>
-    </header>
+      <!-- Navigation (positioned) -->
+      <a href="/collections/drinks" class="nav-item nav-drinks">Drinks</a>
+      <a href="/collections/food" class="nav-item nav-food">food</a>
+      <a href="/collections/pastry" class="nav-item nav-pastry">Pastry</a>
 
-    <main id="MainContent">
-      {%- comment -%}
-        Home page: responsive 3-column menu (categories / plate / details)
-        Cart page: custom cart UI (localStorage-backed demo)
-        About page (page handle "about"): simple about layout
-        Everything else: default Shopify template output
-      {%- endcomment -%}
+      <a href="{{ routes.cart_url }}" class="nav-item nav-order js-popup-trigger" data-popup="cart">order/cart</a>
+      <a href="{{ routes.account_url }}" class="nav-item nav-account js-popup-trigger" data-popup="account">Account</a>
+      <a href="{{ pages['info'].url | default: '/pages/info' }}" class="nav-item nav-info js-popup-trigger" data-popup="info">product info</a>
 
-      {% if template.name == 'index' %}
-        <main class="layout">
-          <!-- Left: categories (desktop) / horizontal tabs (mobile) -->
-          <aside class="categories" data-fade>
-            <h2 class="sr-only">Categories</h2>
-            <div class="categories__list" role="tablist" aria-label="Menu categories" data-categories></div>
-          </aside>
-
-          <!-- Center: plate/display area -->
-          <section class="plate-area" aria-label="Menu items">
-            <div class="plate plate--enter" data-plate>
-              <div class="plate__header" data-fade>
-                <h1 class="h1" data-category-title>Category A</h1>
-                <p class="muted" data-category-desc>Placeholder description for the selected category.</p>
-              </div>
-              <div class="items-grid" data-items></div>
-            </div>
-          </section>
-
-          <!-- Right: details panel (desktop) / below on mobile -->
-          <aside class="details" data-fade aria-label="Selected item details">
-            <div class="details__card">
-              <div class="thumb" aria-hidden="true">
-                <div class="thumb__art"></div>
-              </div>
-
-              <div class="details__body">
-                <h2 class="h2" data-item-title>Item 1</h2>
-                <p class="muted" data-item-desc>
-                  Placeholder item description. Swap this text later with real details.
-                </p>
-
-                <div class="row">
-                  <div class="price" data-item-price>$0.00</div>
-                  <div class="chip" data-item-category>Category A</div>
-                </div>
-
-                <div class="actions">
-                  <button class="btn btn--primary" type="button" data-add-to-order>Add to Order</button>
-                  <button class="btn btn--ghost" type="button" data-open-ingredients>Ingredients</button>
-                </div>
-
-                <p class="note">Pickup only (delivery coming soon).</p>
-              </div>
-            </div>
-          </aside>
-        </main>
-
-      {% elsif template.name == 'cart' %}
-        <main class="page" data-fade>
-          <section class="page__hero">
-            <div class="hero__art hero__art--cart" aria-hidden="true"></div>
-            <div>
-              <h1 class="h1">Cart / Order</h1>
-              <p class="muted">Pickup only (delivery coming soon).</p>
-            </div>
-          </section>
-
-          <section class="cart">
-            <div class="card">
-              <h3 class="h3">Items</h3>
-              <div class="cart__list" data-cart-list></div>
-              <div class="cart__empty muted" data-cart-empty hidden>
-                Your cart is empty. Go back to the menu and add an item.
-              </div>
-            </div>
-
-            <div class="card">
-              <h3 class="h3">Summary</h3>
-              <div class="row row--space">
-                <span class="muted">Total</span>
-                <strong data-cart-total>$0.00</strong>
-              </div>
-              <button class="btn btn--primary" type="button" data-place-order>Place Order</button>
-              <p class="muted" data-order-status></p>
-            </div>
-          </section>
-        </main>
-
-      {% elsif template.name == 'page' and page.handle == 'about' %}
-        <main class="page" data-fade>
-          <section class="page__hero">
-            <div class="hero__art" aria-hidden="true"></div>
-            <div>
-              <h1 class="h1">About</h1>
-              <p class="muted">
-                Placeholder cafe/business info. Replace this copy with your real story, hours,
-                location, and brand voice later.
-              </p>
-              <div class="card">
-                <h4 class="h4">Pickup Only</h4>
-                <p class="muted">Pickup only (delivery coming soon).</p>
-              </div>
-            </div>
-          </section>
-
-          <section class="page__grid">
-            <div class="card">
-              <h3 class="h3">What We Offer</h3>
-              <p class="muted">Placeholder categories and clean 2D illustration style.</p>
-              <ul class="list">
-                <li>Category A</li>
-                <li>Category B</li>
-                <li>Category C</li>
-              </ul>
-            </div>
-            <div class="card">
-              <h3 class="h3">Brand Feel</h3>
-              <p class="muted">
-                Pink + white backgrounds, dark blue text/buttons, lots of whitespace, and smooth animations.
-              </p>
-            </div>
-            <div class="card">
-              <h3 class="h3">Contact</h3>
-              <p class="muted">
-                Placeholder contact info. Use the chat button for questions about ingredients/allergies.
-              </p>
-            </div>
-          </section>
-        </main>
-
-      {% else %}
-        {{ content_for_layout }}
-      {% endif %}
-    </main>
-
-    <!-- Ingredients Modal -->
-    <dialog class="modal" data-modal="ingredients" aria-label="Ingredients and allergen info">
-      <div class="modal__card">
-        <button class="icon-btn modal__close" type="button" data-close-modal aria-label="Close">✕</button>
-        <div class="modal__header">
-          <div class="modal__art" aria-hidden="true"></div>
+      <!-- Popup card -->
+      <div class="popup-overlay" id="popupOverlay" aria-hidden="true">
+        <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+          <button class="popup-close" type="button" aria-label="Close">×</button>
           <div>
-            <h3 class="h3" data-ing-title>Ingredients</h3>
-            <p class="muted" data-ing-subtitle>Notepad-style placeholder info.</p>
-          </div>
-        </div>
-
-        <div class="modal__content">
-          <div class="notepad">
-            <h4 class="h4">Ingredients (placeholder)</h4>
-            <ul class="list" data-ing-list></ul>
-
-            <h4 class="h4">Allergens (placeholder)</h4>
-            <div class="allergens" data-allergen-list></div>
+            <div class="popup-title" id="popupTitle">Menu</div>
+            <div class="popup-actions" id="popupActions"></div>
           </div>
         </div>
       </div>
-    </dialog>
 
-    <!-- Account Modal -->
-    <dialog class="modal" data-modal="account" aria-label="Account and loyalty program">
-      <div class="modal__card">
-        <button class="icon-btn modal__close" type="button" data-close-modal aria-label="Close">✕</button>
-        <div class="modal__header">
-          <div class="modal__art modal__art--account" aria-hidden="true"></div>
-          <div>
-            <h3 class="h3">Account</h3>
-            <p class="muted">Placeholder user info + loyalty program.</p>
-          </div>
-        </div>
-        <div class="modal__content">
-          <div class="card">
-            <div class="card__row">
-              <div>
-                <div class="label">Name</div>
-                <div class="value">User Name</div>
-              </div>
-              <div>
-                <div class="label">Email</div>
-                <div class="value">user@example.com</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h4 class="h4">Loyalty Program</h4>
-            <p class="muted">
-              You earn <strong>+1 point</strong> per added item (stored in localStorage).
+      <!-- Ingredients modal -->
+      <div class="ing-modal" id="ingredientsModal" aria-hidden="true">
+        <div class="ing-card" role="dialog" aria-modal="true" aria-labelledby="ingredientsTitle">
+          <button class="ing-close" type="button" aria-label="Close">×</button>
+          <h3 class="ing-title" id="ingredientsTitle">Ingredients</h3>
+          <div class="ing-note">
+            <p style="margin:0;color:#666;font-size:14px;">
+              Placeholder ingredients/allergen notes. Replace with real data later.
             </p>
-            <div class="progress">
-              <div class="progress__bar" data-points-bar style="width: 0%"></div>
-            </div>
-            <div class="row row--space">
-              <div class="chip" data-points-text>0 points</div>
-              <div class="muted">Goal: 10 points toward free item</div>
-            </div>
+            <h4>Ingredients</h4>
+            <ul class="ing-list" id="ingredientsList"></ul>
+            <h4>Allergens</h4>
+            <div class="allergen-tags" id="allergenTags"></div>
           </div>
         </div>
       </div>
-    </dialog>
 
-    <!-- Floating Chat -->
-    <button class="chat-fab" type="button" aria-label="Open chat" data-open-chat>
-      <span aria-hidden="true">?</span>
-    </button>
-    <dialog class="modal" data-modal="chat" aria-label="Chatbox">
-      <div class="modal__card">
-        <button class="icon-btn modal__close" type="button" data-close-modal aria-label="Close">✕</button>
-        <div class="modal__header">
-          <div class="modal__art modal__art--chat" aria-hidden="true"></div>
-          <div>
-            <h3 class="h3">Questions</h3>
-            <p class="muted">Ask about ingredients or allergies (placeholder).</p>
-          </div>
-        </div>
-        <div class="modal__content">
-          <form class="form" data-chat-form>
-            <label class="field">
-              <span class="field__label">Message</span>
-              <textarea class="field__input" name="message" rows="4" placeholder="Type your question..."></textarea>
-            </label>
-            <label class="field">
-              <span class="field__label">Email</span>
-              <input class="field__input" type="email" name="email" placeholder="you@example.com">
-            </label>
-            <button class="btn btn--primary" type="submit">Submit</button>
-            <p class="muted" data-chat-status></p>
-          </form>
-        </div>
-      </div>
-    </dialog>
+      <main id="MainContent">
+        <div class="home-carousel">
+          <!-- Carousel arrows -->
+          <button class="carousel-nav carousel-prev" type="button" aria-label="Previous">‹</button>
+          <button class="carousel-nav carousel-next" type="button" aria-label="Next">›</button>
 
-    <!-- Cafe template JS -->
-    <script src="{{ 'cafe-template.js' | asset_url }}" defer></script>
+          <!-- Product slides -->
+          {% assign featured = collections.featured.products | default: collections.all.products %}
+          {% for product in featured limit: 8 %}
+            {% assign v = product.selected_or_first_available_variant %}
+            <div
+              class="product-slide {% if forloop.first %}active{% endif %}"
+              data-slide
+              data-product-title="{{ product.title | escape }}"
+              data-variant-id="{{ v.id }}"
+            >
+              <div class="plate-platform">
+                <img src="https://cdn.shopify.com/s/files/1/0723/4302/7849/files/plate.png?v=1768585776" alt="" class="plate-bg">
+                {% if product.featured_image %}
+                  <img src="{{ product.featured_image | image_url: width: 900 }}" alt="{{ product.title | escape }}" class="product-image">
+                {% else %}
+                  <div style="width:52%;height:220px;border-radius:18px;background:rgba(255,255,255,0.25);border:2px dashed rgba(255,255,255,0.45);"></div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </main>
+
+      <button class="action-link action-add" type="button" id="addToOrderBtn">Add to order</button>
+      <button class="action-link action-ingredients" type="button" id="ingredientsBtn">ingredients</button>
+
+      <script>
+        // Page-load animations
+        requestAnimationFrame(() => document.body.classList.add('is-loaded'));
+
+        // Carousel logic (with slide out right / in left)
+        let currentSlide = 0;
+        const slides = Array.from(document.querySelectorAll('[data-slide]'));
+        const totalSlides = slides.length;
+        const prevBtn = document.querySelector('.carousel-prev');
+        const nextBtn = document.querySelector('.carousel-next');
+
+        function setActiveSlide(nextIndex, direction) {
+          if (!totalSlides) return;
+          const prevIndex = currentSlide;
+          const prevSlide = slides[prevIndex];
+          const nextSlide = slides[nextIndex];
+          if (!prevSlide || !nextSlide || prevIndex === nextIndex) return;
+
+          prevSlide.classList.remove('slide-in-left');
+          prevSlide.classList.add('slide-out-right');
+          prevSlide.classList.remove('active');
+
+          nextSlide.classList.remove('slide-out-right');
+          nextSlide.classList.add('active', 'slide-in-left');
+
+          // Cleanup
+          window.setTimeout(() => {
+            prevSlide.classList.remove('slide-out-right');
+            nextSlide.classList.remove('slide-in-left');
+          }, 500);
+
+          currentSlide = nextIndex;
+        }
+
+        function showSlide(index) {
+          if (!totalSlides) return;
+          const nextIndex = ((index % totalSlides) + totalSlides) % totalSlides;
+          setActiveSlide(nextIndex);
+        }
+
+        function changeSlide(direction) {
+          showSlide(currentSlide + direction);
+        }
+
+        prevBtn?.addEventListener('click', () => changeSlide(-1));
+        nextBtn?.addEventListener('click', () => changeSlide(1));
+
+        // Auto-advance
+        if (totalSlides > 1) {
+          setInterval(() => changeSlide(1), 5000);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft') changeSlide(-1);
+          if (e.key === 'ArrowRight') changeSlide(1);
+          if (e.key === 'Escape') {
+            closePopup();
+            closeIngredients();
+          }
+        });
+
+        // Popup card behavior (cart/account/info)
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupActions = document.getElementById('popupActions');
+        const popupClose = popupOverlay?.querySelector('.popup-close');
+
+        const popupContent = {
+          cart: {
+            title: 'Order / Cart',
+            actions: [
+              { label: 'View cart', href: '{{ routes.cart_url }}' },
+              { label: 'Checkout', href: '{{ routes.checkout_url }}' }
+            ]
+          },
+          account: {
+            title: 'Account',
+            actions: [
+              { label: 'Log in', href: '{{ routes.account_login_url }}' },
+              { label: 'Create', href: '{{ routes.account_register_url }}' }
+            ]
+          },
+          info: {
+            title: 'Product info',
+            actions: [
+              { label: 'View info', href: '{{ pages['info'].url | default: '/pages/info' }}' }
+            ]
+          }
+        };
+
+        function openPopup(key) {
+          const data = popupContent[key];
+          if (!data || !popupOverlay || !popupTitle || !popupActions) return;
+          popupTitle.textContent = data.title;
+          popupActions.innerHTML = data.actions
+            .map((action) => `<a href="${action.href}">${action.label}</a>`)
+            .join('');
+          popupOverlay.classList.add('is-open');
+          popupOverlay.setAttribute('aria-hidden', 'false');
+        }
+
+        function closePopup() {
+          if (!popupOverlay) return;
+          popupOverlay.classList.remove('is-open');
+          popupOverlay.setAttribute('aria-hidden', 'true');
+        }
+
+        document.querySelectorAll('.js-popup-trigger').forEach((link) => {
+          link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const key = link.getAttribute('data-popup');
+            openPopup(key);
+          });
+        });
+
+        popupOverlay?.addEventListener('click', (event) => {
+          if (event.target === popupOverlay) closePopup();
+        });
+        popupClose?.addEventListener('click', closePopup);
+
+        // Ingredients modal (placeholder content)
+        const ingredientsModal = document.getElementById('ingredientsModal');
+        const ingredientsClose = ingredientsModal?.querySelector('.ing-close');
+        const ingredientsTitle = document.getElementById('ingredientsTitle');
+        const ingredientsList = document.getElementById('ingredientsList');
+        const allergenTags = document.getElementById('allergenTags');
+
+        const placeholderIngredients = ['Ingredient 1', 'Ingredient 2', 'Ingredient 3'];
+        const placeholderAllergens = ['Nuts', 'Dairy', 'Gluten', 'Soy'];
+
+        function openIngredients() {
+          const active = slides[currentSlide];
+          const title = active?.getAttribute('data-product-title') || 'Item';
+          if (ingredientsTitle) ingredientsTitle.textContent = `Ingredients — ${title}`;
+          if (ingredientsList) {
+            ingredientsList.innerHTML = placeholderIngredients.map((x) => `<li>${x}</li>`).join('');
+          }
+          if (allergenTags) {
+            allergenTags.innerHTML = placeholderAllergens.map((x) => `<span class="tag">${x}</span>`).join('');
+          }
+          if (!ingredientsModal) return;
+          ingredientsModal.classList.add('is-open');
+          ingredientsModal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeIngredients() {
+          if (!ingredientsModal) return;
+          ingredientsModal.classList.remove('is-open');
+          ingredientsModal.setAttribute('aria-hidden', 'true');
+        }
+
+        ingredientsModal?.addEventListener('click', (e) => {
+          if (e.target === ingredientsModal) closeIngredients();
+        });
+        ingredientsClose?.addEventListener('click', closeIngredients);
+        document.getElementById('ingredientsBtn')?.addEventListener('click', openIngredients);
+
+        // Add to cart using Shopify AJAX API (/cart/add.js)
+        async function addActiveToCart() {
+          const active = slides[currentSlide];
+          const variantId = active?.getAttribute('data-variant-id');
+          if (!variantId) return;
+          try {
+            await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ items: [{ id: Number(variantId), quantity: 1 }] })
+            });
+            // Update count (optional)
+            const cart = await fetch('/cart.js').then((r) => r.json());
+            const pill = document.querySelector('[data-cart-count]');
+            if (pill && cart && typeof cart.item_count === 'number') pill.textContent = String(cart.item_count);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        document.getElementById('addToOrderBtn')?.addEventListener('click', addActiveToCart);
+      </script>
+    {% else %}
+      <main id="MainContent">
+        {{ content_for_layout }}
+      </main>
+    {% endif %}
   </body>
 </html>
 
