@@ -1,0 +1,412 @@
+:root {
+  --caf-bg: #e84f8c;
+  --caf-ink: rgba(255, 255, 255, 0.92);
+  --caf-ink-dim: rgba(255, 255, 255, 0.72);
+  --caf-soft: rgba(255, 210, 230, 0.9);
+  --caf-soft-bg: rgba(255, 255, 255, 0.12);
+  --caf-shadow: rgba(0, 0, 0, 0.22);
+  --caf-rail-w: clamp(150px, 18vw, 240px);
+  --caf-rail-gap: clamp(16px, 3vw, 40px);
+  --caf-btn-h: 44px;
+  --caf-btn-font: clamp(16px, 1.8vw, 22px);
+  --caf-stage-max: 980px;
+}
+
+/* Apply fullscreen behavior only on the intended template */
+body.template-page-cafe-ordering,
+body.template-page-cafe-ordering #MainContent {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+body.template-page-cafe-ordering {
+  background: var(--caf-bg);
+}
+
+/* Optional: hide theme chrome if present on this template */
+body.template-page-cafe-ordering #shopify-section-header,
+body.template-page-cafe-ordering #shopify-section-footer,
+body.template-page-cafe-ordering header,
+body.template-page-cafe-ordering footer {
+  display: none !important;
+}
+
+.caf-ordering {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: var(--caf-bg);
+  color: var(--caf-ink);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.caf-ordering * {
+  box-sizing: border-box;
+}
+
+/* LEFT + RIGHT rails are fixed; never reflow */
+.caf-left,
+.caf-right {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  z-index: 10;
+  width: var(--caf-rail-w);
+}
+
+.caf-left {
+  left: var(--caf-rail-gap);
+  align-items: flex-start;
+}
+
+.caf-right {
+  right: var(--caf-rail-gap);
+  align-items: flex-end;
+}
+
+.caf-btn {
+  height: var(--caf-btn-h);
+  width: 100%;
+  padding: 0 16px;
+  border: 0;
+  background: transparent;
+  color: var(--caf-ink);
+  text-align: left;
+  font-size: var(--caf-btn-font);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  user-select: none;
+  appearance: none;
+}
+
+.caf-right .caf-btn {
+  text-align: right;
+}
+
+.caf-btn[aria-pressed="true"] {
+  color: #ffffff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.caf-btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 4px;
+  border-radius: 10px;
+}
+
+/* Optional search (must not push anything) */
+.caf-search-shell {
+  position: fixed;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.caf-search {
+  pointer-events: auto;
+  width: min(340px, 64vw);
+  height: 34px;
+  border-radius: 999px;
+  border: 1.5px solid var(--caf-soft);
+  background: var(--caf-soft-bg);
+  padding: 0 14px;
+  color: rgba(255, 255, 255, 0.95);
+  outline: none;
+}
+
+.caf-search::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Center stage is anchored to the viewport center */
+.caf-stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.caf-stage-inner {
+  width: min(var(--caf-stage-max), 100vw);
+  height: min(600px, 80vh);
+  display: grid;
+  grid-template-columns: 90px 1fr 90px;
+  align-items: center;
+  justify-items: center;
+  padding: 0 clamp(12px, 2vw, 24px);
+}
+
+.caf-arrow {
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.38);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 30px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  z-index: 12; /* above product, but static */
+  appearance: none;
+}
+
+.caf-arrow:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 4px;
+}
+
+.caf-plate-stack {
+  position: relative;
+  width: min(620px, 56vw);
+  height: min(460px, 60vh);
+  display: grid;
+  place-items: center;
+}
+
+/* viewport for product animation */
+.caf-product-viewport {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden; /* keep animation inside */
+  z-index: 11;
+}
+
+.caf-product-layer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.caf-product {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  width: min(260px, 32vw);
+  height: auto;
+  filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.22));
+  will-change: transform, opacity;
+  user-select: none;
+}
+
+/* Plate is a fixed background object (pure CSS) */
+.caf-plate {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  transform: translate(-50%, -50%);
+  width: min(520px, 54vw);
+  height: min(180px, 20vh);
+  background:
+    radial-gradient(
+      ellipse at 50% 45%,
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.2) 55%,
+      rgba(0, 0, 0, 0) 70%
+    ),
+    radial-gradient(ellipse at 50% 50%, #3a3a3a, #1f1f1f);
+  border-radius: 999px;
+  box-shadow: 0 24px 40px rgba(0, 0, 0, 0.22);
+  z-index: 10;
+}
+
+/* Animation: old out right, new in from left */
+@keyframes cafSlideInFromLeft {
+  from {
+    transform: translate(calc(-50% - 80px), -50%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes cafSlideOutToRight {
+  from {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  to {
+    transform: translate(calc(-50% + 80px), -50%);
+    opacity: 0;
+  }
+}
+
+.caf-product.entering {
+  animation: cafSlideInFromLeft 260ms ease-out both;
+}
+
+.caf-product.exiting {
+  animation: cafSlideOutToRight 260ms ease-in both;
+}
+
+/* Toast */
+.caf-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  background: rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.95);
+  padding: 10px 14px;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 140ms ease;
+  font-size: 14px;
+}
+
+.caf-toast.show {
+  opacity: 1;
+}
+
+/* Modal overlay + card (centered) */
+.caf-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: rgba(0, 0, 0, 0.18);
+  display: grid;
+  place-items: center;
+}
+
+.caf-modal {
+  position: relative;
+  width: min(420px, 86vw);
+  max-height: min(560px, 78vh);
+  overflow: auto;
+  padding: 18px 18px 16px;
+  background: rgba(255, 237, 246, 0.92);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+  color: rgba(0, 0, 0, 0.78);
+}
+
+.caf-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: 0;
+  background: transparent;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.7);
+  appearance: none;
+}
+
+.caf-modal-title {
+  margin: 0 0 10px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.caf-modal-body {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.caf-pill-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 10px 0 0;
+}
+
+.caf-pill {
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.55);
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  appearance: none;
+}
+
+.caf-pill[aria-pressed="true"] {
+  border-color: rgba(0, 0, 0, 0.35);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.caf-cart-list {
+  display: grid;
+  gap: 10px;
+  margin: 6px 0 14px;
+}
+
+.caf-cart-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.caf-qty-controls {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.caf-qty-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  appearance: none;
+}
+
+.caf-primary {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.72);
+  color: rgba(255, 255, 255, 0.95);
+  padding: 12px 12px;
+  cursor: pointer;
+  appearance: none;
+}
+
+/* Small screens: keep 3 zones; shrink rails rather than reflow */
+@media (max-width: 520px) {
+  :root {
+    --caf-rail-w: 130px;
+    --caf-btn-font: 16px;
+  }
+
+  .caf-stage-inner {
+    grid-template-columns: 76px 1fr 76px;
+  }
+
+  .caf-arrow {
+    width: 54px;
+    height: 54px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+

@@ -1,0 +1,208 @@
+{%- comment -%}
+  Cafe Ordering Interface (Page 1)
+  - Fixed 3-zone layout: left categories, center plate+arrows, right actions
+  - No navigation, no layout shift
+  - Only product image animates on change
+
+  Data source:
+  - Use three collections (drinks/food/pastries) selected in section settings.
+{%- endcomment -%}
+
+<div class="caf-ordering" data-caf-ordering>
+  <nav class="caf-left" data-caf-left aria-label="Categories">
+    <button class="caf-btn" type="button" data-category="food" aria-pressed="false">FOOD</button>
+    <button class="caf-btn" type="button" data-category="drinks" aria-pressed="true">DRINKS</button>
+    <button class="caf-btn" type="button" data-category="pastries" aria-pressed="false">PASTRIES</button>
+  </nav>
+
+  <section class="caf-stage" aria-label="Plate and item viewer">
+    <div class="caf-stage-inner">
+      <button class="caf-arrow" type="button" aria-label="Previous item" data-caf-prev>
+        <span aria-hidden="true">←</span>
+      </button>
+
+      <div class="caf-plate-stack">
+        <div class="caf-product-viewport" aria-label="Current item">
+          <div class="caf-product-layer" data-caf-product-layer></div>
+        </div>
+        <div class="caf-plate" aria-hidden="true"></div>
+      </div>
+
+      <button class="caf-arrow" type="button" aria-label="Next item" data-caf-next>
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </section>
+
+  <aside class="caf-right" data-caf-right aria-label="Actions">
+    <button class="caf-btn" type="button" data-action="add">Add to Order</button>
+    <button class="caf-btn" type="button" data-action="ingredients">Ingredients</button>
+    <button class="caf-btn" type="button" data-action="account">Account</button>
+    <button class="caf-btn" type="button" data-action="cart">Cart</button>
+  </aside>
+
+  {%- if section.settings.show_search -%}
+    <div class="caf-search-shell" aria-label="Search">
+      <input class="caf-search" data-caf-search type="search" placeholder="search" autocomplete="off">
+    </div>
+  {%- endif -%}
+
+  <div class="caf-toast" data-caf-toast role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="caf-overlay" data-caf-overlay hidden>
+    <div class="caf-modal" role="dialog" aria-modal="true" aria-labelledby="caf-modal-title-{{ section.id }}">
+      <button class="caf-modal-close" type="button" aria-label="Close modal" data-caf-modal-close>×</button>
+      <h2 class="caf-modal-title" id="caf-modal-title-{{ section.id }}" data-caf-modal-title></h2>
+      <div class="caf-modal-body" data-caf-modal-body></div>
+    </div>
+  </div>
+
+  <template data-caf-account-template>
+    <div>
+      {%- if customer -%}
+        <p style="margin:0 0 10px;">Signed in as <strong>{{ customer.email | escape }}</strong></p>
+        <a class="caf-primary" href="{{ routes.account_url }}" style="display:inline-block;text-align:center;text-decoration:none;">Account</a>
+      {%- else -%}
+        {%- form 'customer_login' -%}
+          <div style="display:grid;gap:10px;">
+            <input
+              type="email"
+              name="customer[email]"
+              autocomplete="email"
+              placeholder="Email"
+              style="height:36px;border-radius:10px;border:1px solid rgba(0,0,0,0.18);padding:0 10px;background:rgba(255,255,255,0.75);"
+              required
+            >
+            <input
+              type="password"
+              name="customer[password]"
+              autocomplete="current-password"
+              placeholder="Password"
+              style="height:36px;border-radius:10px;border:1px solid rgba(0,0,0,0.18);padding:0 10px;background:rgba(255,255,255,0.75);"
+              required
+            >
+            <button class="caf-primary" type="submit">Sign in</button>
+            <a href="{{ routes.account_register_url }}" style="text-align:center;color:rgba(0,0,0,0.72);text-decoration:none;">Create account</a>
+          </div>
+        {%- endform -%}
+      {%- endif -%}
+    </div>
+  </template>
+
+  <script type="application/json" data-caf-data>
+    {
+      "initialCategory": {{ section.settings.default_category | json }},
+      "currency": {{ shop.currency | json }},
+      "categories": {
+        "drinks": [
+          {%- if section.settings.drinks_collection != blank -%}
+            {%- for product in section.settings.drinks_collection.products limit: section.settings.max_items -%}
+              {%- assign vlist = product.variants -%}
+              {
+                "product_id": {{ product.id | json }},
+                "title": {{ product.title | json }},
+                "image": {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 900 | json }}{%- else -%}""{%- endif -%},
+                "variants": [
+                  {%- for v in vlist -%}
+                    { "id": {{ v.id | json }}, "title": {{ v.title | json }} }{%- unless forloop.last -%},{%- endunless -%}
+                  {%- endfor -%}
+                ],
+                "ingredients": {%- assign ing = product.metafields.custom.ingredients.value -%}{%- if ing != blank -%}{{ ing | json }}{%- else -%}[]{%- endif -%},
+                "sizes": ["Small","Medium","Large"]
+              }{%- unless forloop.last -%},{%- endunless -%}
+            {%- endfor -%}
+          {%- endif -%}
+        ],
+        "food": [
+          {%- if section.settings.food_collection != blank -%}
+            {%- for product in section.settings.food_collection.products limit: section.settings.max_items -%}
+              {
+                "product_id": {{ product.id | json }},
+                "title": {{ product.title | json }},
+                "image": {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 900 | json }}{%- else -%}""{%- endif -%},
+                "variants": [
+                  {%- for v in product.variants -%}
+                    { "id": {{ v.id | json }}, "title": {{ v.title | json }} }{%- unless forloop.last -%},{%- endunless -%}
+                  {%- endfor -%}
+                ],
+                "ingredients": {%- assign ing = product.metafields.custom.ingredients.value -%}{%- if ing != blank -%}{{ ing | json }}{%- else -%}[]{%- endif -%}
+              }{%- unless forloop.last -%},{%- endunless -%}
+            {%- endfor -%}
+          {%- endif -%}
+        ],
+        "pastries": [
+          {%- if section.settings.pastries_collection != blank -%}
+            {%- for product in section.settings.pastries_collection.products limit: section.settings.max_items -%}
+              {
+                "product_id": {{ product.id | json }},
+                "title": {{ product.title | json }},
+                "image": {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 900 | json }}{%- else -%}""{%- endif -%},
+                "variants": [
+                  {%- for v in product.variants -%}
+                    { "id": {{ v.id | json }}, "title": {{ v.title | json }} }{%- unless forloop.last -%},{%- endunless -%}
+                  {%- endfor -%}
+                ],
+                "ingredients": {%- assign ing = product.metafields.custom.ingredients.value -%}{%- if ing != blank -%}{{ ing | json }}{%- else -%}[]{%- endif -%}
+              }{%- unless forloop.last -%},{%- endunless -%}
+            {%- endfor -%}
+          {%- endif -%}
+        ]
+      }
+    }
+  </script>
+</div>
+
+{% schema %}
+{
+  "name": "Cafe ordering interface",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "default_category",
+      "label": "Default category",
+      "default": "drinks",
+      "options": [
+        { "value": "drinks", "label": "Drinks" },
+        { "value": "food", "label": "Food" },
+        { "value": "pastries", "label": "Pastries" }
+      ]
+    },
+    {
+      "type": "collection",
+      "id": "drinks_collection",
+      "label": "Drinks collection"
+    },
+    {
+      "type": "collection",
+      "id": "food_collection",
+      "label": "Food collection"
+    },
+    {
+      "type": "collection",
+      "id": "pastries_collection",
+      "label": "Pastries collection"
+    },
+    {
+      "type": "range",
+      "id": "max_items",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 8,
+      "label": "Max items per category"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "default": false,
+      "label": "Show search bar (top center)"
+    }
+  ],
+  "presets": [
+    { "name": "Cafe ordering interface" }
+  ]
+}
+{% endschema %}
+

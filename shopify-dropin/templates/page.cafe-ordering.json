@@ -1,0 +1,19 @@
+{
+  "sections": {
+    "main": {
+      "type": "cafe-ordering-interface",
+      "settings": {
+        "default_category": "drinks",
+        "drinks_collection": "",
+        "food_collection": "",
+        "pastries_collection": "",
+        "max_items": 8,
+        "show_search": false
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
+

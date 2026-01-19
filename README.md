@@ -26,3 +26,13 @@ Then open `http://localhost:8000`.
 - **Ingredients**: opens a centered modal; drinks include size options.
 - **Account**: opens a centered modal (demo “Shopify login” card).
 - **Cart**: opens a centered modal with items, quantities, and checkout button (demo).
+
+## Shopify (theme “Edit code”) drop-in
+
+If you want to install this UI into a Shopify Online Store 2.0 theme, use the files in:
+
+- `shopify-dropin/`
+
+Start with:
+
+- `shopify-dropin/SHOPIFY_SETUP.md`
