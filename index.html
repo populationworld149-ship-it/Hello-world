@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Café Ordering Interface</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app" aria-label="Cafe ordering interface">
+      <!-- LEFT: Category toggles (fixed vertical stack) -->
+      <nav class="left-rail" aria-label="Categories">
+        <button class="rail-btn" type="button" data-category="food" aria-pressed="false">
+          FOOD
+        </button>
+        <button class="rail-btn" type="button" data-category="drinks" aria-pressed="true">
+          DRINKS
+        </button>
+        <button class="rail-btn" type="button" data-category="pastries" aria-pressed="false">
+          PASTRIES
+        </button>
+      </nav>
+
+      <!-- CENTER: Plate + product + arrows (plate never moves; only product animates) -->
+      <section class="stage" aria-label="Plate and item viewer">
+        <div class="top-banner" aria-hidden="true"></div>
+
+        <div class="stage-inner">
+          <button
+            class="arrow arrow-left"
+            type="button"
+            aria-label="Previous item"
+            title="Previous"
+          >
+            <span aria-hidden="true">←</span>
+          </button>
+
+          <div class="plate-stack" aria-live="polite">
+            <div class="product-viewport" aria-label="Current item">
+              <div class="product-layer" id="product-layer">
+                <!-- product nodes injected by JS -->
+              </div>
+            </div>
+
+            <div class="plate" aria-hidden="true"></div>
+          </div>
+
+          <button class="arrow arrow-right" type="button" aria-label="Next item" title="Next">
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- RIGHT: Actions (fixed vertical stack) -->
+      <aside class="right-rail" aria-label="Actions">
+        <button class="rail-btn action" type="button" data-action="add">
+          Add to Order
+        </button>
+        <button class="rail-btn action" type="button" data-action="ingredients">
+          Ingredients
+        </button>
+        <button class="rail-btn action" type="button" data-action="account">
+          Account
+        </button>
+        <button class="rail-btn action" type="button" data-action="cart">
+          Cart
+        </button>
+      </aside>
+
+      <!-- Optional search (must not move plate/buttons) -->
+      <div class="search-shell" aria-label="Search">
+        <input
+          id="search"
+          class="search"
+          type="search"
+          placeholder="search"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Toast confirmation (small, unobtrusive) -->
+      <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+      <!-- Modal overlay -->
+      <div class="overlay" id="overlay" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+          <button class="modal-close" type="button" aria-label="Close modal" id="modal-close">
+            ×
+          </button>
+          <h2 class="modal-title" id="modal-title"></h2>
+          <div class="modal-body" id="modal-body"></div>
+        </div>
+      </div>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
